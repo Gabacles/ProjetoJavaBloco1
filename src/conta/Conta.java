@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class Conta {
+public abstract class Conta {
 	
 	private Cliente cliente;
 	private int agencia;
@@ -122,14 +122,6 @@ public class Conta {
 	
 	public void receberValor(double valor) {
 		this.saldo += valor; 
-	}
-
-	public List<String> getExtrato() {
-		return extrato;
-	}
-
-	public void setExtrato(List<String> extrato) {
-		this.extrato = extrato;
 	}
 
 	public void consultarSaldo() {
