@@ -20,6 +20,7 @@ public abstract class Conta {
 	private List<String> extrato;
 	private static List<Conta> contasAbertas = new ArrayList<>();
 	private Random rand = new Random();
+	private int taxaTransferencia = 5;
 	
 	public Conta(Pessoa cliente, double saldo, String senha) {
 		this.cliente = cliente;
@@ -66,6 +67,47 @@ public abstract class Conta {
 	}
 	
 	public void transferir(double valor, int numeroDaConta, String senha) {
+		
+		List<Integer> numeroDeContas = new ArrayList<>();
+		for (Conta conta : contasAbertas) {	
+			if (conta.getNumeroDaConta() == numeroDaConta) {
+				numeroDeContas.add(conta.getNumeroDaConta());
+				if (conta.isStatus() == false) {
+					System.out.println("TransferÃªncia nÃ£o realizada. A conta do/a foverecido/a estÃ¡ bloqueada.");
+				} else if (valor <= saldo & this.getSenha().equals(senha)) {
+					saldo -= (valor + taxaTransferencia);
+					tentativasErradas = 0;
+					conta.receberValor(valor);
+					extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
+					extrato.add("TransferÃªncia de " + valor + " R$ feita para " + conta.cliente.getNome()
+							+ ".\n\t\t\t\t\t\tSaldo: " + saldo + " R$ \n");
+					conta.extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
+					conta.extrato.add("TransferÃªncia de " + valor + " R$ recebida de " + cliente.getNome()
+							+ ".\n\t\t\t\t\t\tSaldo: " + conta.getSaldo() + " R$ \n");
+					System.out.println(
+							"A sua tranferÃªncia para " + conta.cliente.getNome() + " foi realizada com sucesso.");
+				} else if (valor > saldo) {
+					System.out.println("Seu saldo Ã© insuficiente.");
+				} else {
+					System.out.println("Sua senha estÃ¡ incorreta. VocÃª pode redefini-la, caso precise. "
+							+ "TrÃªs tentativas erradas bloqueiam a conta.");
+					if (tentativasErradas == 3) {
+						status = false;
+					} else {
+						tentativasErradas++;
+						System.out.println("VocÃª ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
+					}
+				} 
+			}
+		}
+		
+		if (!numeroDeContas.contains(numeroDaConta)) {
+			System.out.println("O nÃºmero da conta informada nÃ£o existe.");
+		}
+		
+	}
+	
+	public void transferir(double valor, int numeroDaConta, String senha, String modalidade) {
 		
 		List<Integer> numeroDeContas = new ArrayList<>();
 		for (Conta conta : contasAbertas) {	
