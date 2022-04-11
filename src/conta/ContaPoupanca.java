@@ -15,7 +15,7 @@ public class ContaPoupanca extends Conta{
 		return rendimento;
 	}
 	
-	public void setRendimento(double taxa) {
+	public void setRendimento(double rendimento) {
 		this.rendimento = rendimento;
 	}
 
