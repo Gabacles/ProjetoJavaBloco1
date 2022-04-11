@@ -35,8 +35,28 @@ public abstract class Conta {
 	{
 		getContasAbertas().add(this);
 	}
+	
+	
 
-	public abstract void sacar(); 
+	public List<String> getExtrato() {
+		return extrato;
+	}
+
+	public void setExtrato(List<String> extrato) {
+		this.extrato = extrato;
+	}
+	
+	
+
+	public int getTentativasErradas() {
+		return tentativasErradas;
+	}
+
+	public void setTentativasErradas(int tentativasErradas) {
+		this.tentativasErradas = tentativasErradas;
+	}
+
+	public abstract void sacar(double valor, String senha); 
 	
 	public void depositar(double valor) {
 			saldo += valor;
