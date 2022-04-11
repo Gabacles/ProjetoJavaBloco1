@@ -23,7 +23,7 @@ public class ContaPoupanca extends Conta{
 		public void sacar(double valor, String senha) {
 		
 		if (valor <= this.getSaldo() & this.getSenha().equals(senha)) {
-			setSaldo(getSaldo() - valor);
+			setSaldo((getSaldo()* rendimento) - valor);
 			setTentativasErradas(0);
 			getExtrato().add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
 			getExtrato().add("Saque de " + valor + " R$." +  "\n\t\t\t\t\t\tSaldo: " + getSaldo() + " R$ \n");
