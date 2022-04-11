@@ -5,7 +5,7 @@ import java.util.*;
 
 public class ContaPoupanca extends Conta{
 	
-	private double rendimento = 0.25;
+	private double rendimento = 1.25;
 	
 	public ContaPoupanca(Pessoa cliente, double saldo, String senha) {
 		super(cliente, saldo, senha);
