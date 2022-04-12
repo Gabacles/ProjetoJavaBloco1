@@ -4,7 +4,6 @@ import conta.*;
 import pessoa.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +14,7 @@ public class ProgramaBanco {
 		List<PessoaJuridica> clientesJ = new ArrayList<PessoaJuridica>();
 		Scanner ler = new Scanner(System.in);
 		Conta usuarioLogado;
-		int login;
+		int login=0;
 		String senha;
 		boolean usuario=false;
 		
@@ -33,35 +32,76 @@ public class ProgramaBanco {
 		
 		while(usuario == false) {
 			int opcao = 0;
-			System.out.println("============Banco JP============");
+			int opcaoLogin = 0;
+			System.out.println("============================BANCO JP============================");
 			System.out.println("1 - Login\n2 - Cadastro");
-			System.out.print("Digite a opÁ„o: ");
-			opcao = ler.nextInt();
-			if (opcao == 2) {
-				System.out.println("==============CADASTRAR============");
-				System.out.println("\n1 - Cadastro de pessoa fÌsica\n2 - Cadastro de pessoa jurÌdica");
-				System.out.print("Digite a opÁ„o: ");
-				opcao = ler.nextInt();
-				if (opcao == 1) {
+			boolean continueLoop=true;
+			do {
+				try {
+					System.out.print("Digite a op√ß√£o: ");
+					opcaoLogin = ler.nextInt();
+					continueLoop = false;
+				}catch(java.util.InputMismatchException e){
+					ler.next();
+					System.out.println("Erro! Digite apenas n√∫meros.\n");
+				}
+			}while(continueLoop);
+			continueLoop=true;
+			if (opcaoLogin == 2) {
+				System.out.println("===========================CADASTRAR============================");
+				System.out.println("1 - Cadastro de pessoa f√≠sica\n2 - Cadastro de pessoa jur√≠dica");
+				do {
+					try {
+						System.out.print("Digite a op√ß√£o: ");
+						opcaoLogin = ler.nextInt();
+						continueLoop = false;
+					}catch(java.util.InputMismatchException e){
+						ler.next();
+						System.out.println("Erro! Digite apenas n√∫meros.\n");
+					}
+				}while(continueLoop);
+				continueLoop=true;
+				if (opcaoLogin == 1) {
 					System.out.println("Digite o nome: ");
 					String nome = ler.next();
 					System.out.println("Digite o telefone: ");
 					String telefone = ler.next();
 					System.out.println("Digite o CPF: ");
 					String cpf = ler.next();
+					for (int i = 0; i < clientesF.size(); i++) {
+						while (clientesF.get(i).getCpf().equals(cpf)) {
+							System.out.println("O CPF "+clientesF.get(i).getCpf()+" j√° possui conta corrente.");
+							System.out.println("Digite o CPF: ");
+							cpf = ler.next();
+						}
+					}
 					System.out.println("Digite o tipo da conta: ");
 					String tipo = ler.next();
-					System.out.println("Digite o saldo inicial: ");
-					int saldo = ler.nextInt();
+					while (!tipo.equals("corrente") && !tipo.equals("poupanca")) {
+						System.out.println("Tipo de conta inv√°lida! Digite 'poupanca' ou 'corrente'.");
+						System.out.println("Digite o tipo da conta: ");
+						tipo = ler.next();
+					}
+					int saldo = 0;
+					do {
+						try {
+							System.out.println("Digite o saldo inicial: ");
+							saldo = ler.nextInt();
+							continueLoop = false;
+						}catch(java.util.InputMismatchException e){
+							ler.next();
+							System.out.println("Erro! Digite apenas n√∫meros.\n");
+						}
+					}while(continueLoop);
+					continueLoop=true;
 					System.out.println("Digite a senha: ");
 					String senha1 = ler.next();
 					clientesF.add(new PessoaFisica(nome, telefone, cpf, tipo, saldo, senha1));
-					System.out.println(clientesF.get(0).getNome());
 					System.out.println("Cliente cadastrado com sucesso!");
 					Conta.imprimirContasAbertas();
-					opcao=0;
+					opcaoLogin=0;
 				}
-				else if (opcao == 2) {
+				else if (opcaoLogin == 2) {
 					System.out.println("Digite o nome da empresa: ");
 					String nome = ler.next();
 					System.out.println("Digite o telefone: ");
@@ -70,22 +110,48 @@ public class ProgramaBanco {
 					String cpf = ler.next();
 					System.out.println("Digite o tipo da conta: ");
 					String tipo = ler.next();
-					System.out.println("Digite o saldo inicial: ");
-					int saldo = ler.nextInt();
+					while (!tipo.equals("corrente") && !tipo.equals("poupanca")) {
+						System.out.println("Tipo de conta inv√°lida! Digite 'poupanca' ou 'corrente'.");
+						System.out.println("Digite o tipo da conta: ");
+						tipo = ler.next();
+					}
+					int saldo = 0;
+					do {
+						try {
+							System.out.println("Digite o saldo inicial: ");
+							saldo = ler.nextInt();
+							continueLoop = false;
+						}catch(java.util.InputMismatchException e){
+							ler.next();
+							System.out.println("Erro! Digite apenas n√∫meros.\n");
+						}
+					}while(continueLoop);
+					continueLoop=true;
 					System.out.println("Digite a senha: ");
 					String senha1 = ler.next();
 					clientesJ.add(new PessoaJuridica(nome, telefone, cpf, tipo, saldo, senha1));
 					System.out.println(clientesJ.get(0).getNome());
 					System.out.println("Cliente cadastrado com sucesso!");
 					Conta.imprimirContasAbertas();
-					opcao=0;
+					opcaoLogin=0;
 				}
 			}
-			else if (opcao == 1) {
-				System.out.println("==============LOGIN==============");
-				System.out.print("Digite o n˙mero da conta: ");
-				login = ler.nextInt();
-				ler.nextLine(); 
+			else if (opcaoLogin == 1) {
+				//System.out.println(programa.Fontes.textoLogin);
+				//System.out.println("=============================LOGIN==============================");
+				
+				do {
+					try {
+						System.out.print("Digite o n√∫mero da conta: ");
+						login = ler.nextInt();
+						ler.nextLine();
+						continueLoop = false;
+					}catch(java.util.InputMismatchException e){
+						ler.next();
+						System.out.println("Erro! Digite apenas n√∫meros.\n");
+					}
+				}while(continueLoop);
+				continueLoop=true;
 				System.out.print("Digite sua senha: ");
 				senha = ler.next();
 				for (Conta conta : Conta.getContasAbertas()) {
@@ -93,38 +159,49 @@ public class ProgramaBanco {
 			    		usuarioLogado = conta;
 			    		usuario=true;
 			    		while(opcao != 7) {
-			    			System.out.println("=============Bem-vindo============");
-			    			System.out.println("1 - DepÛsito\n2 - Saque\n3 - TransferÍncia\n4 - Extrato\n5 - Redefinir senha\n6 - Sair\n7 - Encerrar");
-			    			System.out.println("Digite o tipo de operaÁ„o: ");
-			    			opcao = ler.nextInt();
+			    			System.out.println("============================BEM-VINDO===========================");
+			    			System.out.println("1 - Dep√≥sito\n2 - Saque\n3 - Transfer√™ncia\n4 - Extrato\n5 - Redefinir senha\n6 - Sair\n7 - Encerrar programa");
+			    			System.out.println("================================================================");
+			    			do {
+								try {
+									System.out.println("Digite o tipo de opera√ß√£o: ");
+					    			opcao = ler.nextInt();
+									continueLoop = false;
+								}catch(java.util.InputMismatchException e){
+									ler.next();
+									System.out.println("Erro! Digite apenas n√∫meros.\n");
+								}
+							}while(continueLoop);
+							continueLoop=true;
 			    			if (opcao == 1) {
-			    				boolean continueLoop=true;
+			    				continueLoop=true;
 			    				do {
 			    					try {
-			    						System.out.println("Digite o valor para depÛsito: ");
+			    						System.out.println("============================DEPOSITAR===========================");
+			    						System.out.println("Digite o valor para dep√≥sito: ");
 			    						double valor = ler.nextDouble();
 			    						while(valor <= 0) {
-			    							System.out.println("Valor inv·lido! Digite um valor maior que 0.");
-			    							System.out.println("Digite o valor para depÛsito: ");
+			    							System.out.println("Valor inv√°lido! Digite um valor maior que 0.");
+			    							System.out.println("Digite o valor para dep√≥sito: ");
 				    						valor = ler.nextDouble();
 			    						}
 			    						usuarioLogado.depositar(valor);
 			    						continueLoop = false;
 			    					}catch(java.util.InputMismatchException e){
 			    						ler.next();
-		    							System.out.println("Erro! Digite apenas n˙meros.\n");
+		    							System.out.println("Erro! Digite apenas n√∫meros.\n");
 		    						}
 			    				}while(continueLoop);
 			    			}
 			    			else if (opcao == 2) {
-			    				boolean continueLoop=true;
+			    				continueLoop=true;
 			    				do {
 			    					try {
 			    						System.out.print("Digite o valor para saque: ");
 					    				double valor = ler.nextDouble();
 					    				while(valor <= 0) {
-			    							System.out.println("Valor inv·lido! Digite um valor maior que 0.");
-			    							System.out.println("Digite o valor para depÛsito: ");
+			    							System.out.println("Valor inv√°lido! Digite um valor maior que 0.");
+			    							System.out.println("Digite o valor para dep√≥sito: ");
 				    						valor = ler.nextDouble();
 			    						}
 					    				System.out.print("Digite sua senha: ");
@@ -133,37 +210,64 @@ public class ProgramaBanco {
 			    						continueLoop = false;
 			    					}catch(java.util.InputMismatchException e){
 			    						ler.next();
-		    							System.out.println("Erro! Digite apenas n˙meros.\n");
+		    							System.out.println("Erro! Digite apenas n√∫meros.\n");
 		    						}
 			    				}while(continueLoop);
 			    			}
 			    			else if (opcao == 3) {
-			    				boolean continueLoop=true;
+			    				int tipoTransferencia=0;
+			    				System.out.println("===========================TRANSFERIR===========================");
 			    				do {
 			    					try {
-			    						System.out.print("Digite o valor da transferÍncia: ");
+			    						System.out.println("1 - TED\n2 - Pix");
+					    				System.out.println("================================================================");
+					    				System.out.print("Digite a op√ß√£o: ");
+					    				tipoTransferencia = ler.nextInt();
+					    				continueLoop=false;
+					    				while (tipoTransferencia != 1 && tipoTransferencia != 2) {
+					    					System.out.println("Op√ß√£o inv√°lida!");
+					    					System.out.println("================================================================");
+						    				System.out.print("Digite a op√ß√£o: ");
+						    				tipoTransferencia = ler.nextInt();
+					    				}
+			    					}catch(java.util.InputMismatchException e){
+			    						ler.next();
+		    							System.out.println("Erro! Digite apenas n√∫meros.\n");
+		    						}
+			    				}while(continueLoop);
+			    				continueLoop=true;
+			    				do {
+			    					try {
+			    						System.out.print("Digite o valor da transfer√™ncia: ");
 					    				double valor = ler.nextDouble();
 					    				while(valor <= 0) {
-			    							System.out.println("Valor inv·lido! Digite um valor maior que 0.");
-			    							System.out.println("Digite o valor para depÛsito: ");
+			    							System.out.println("Valor inv√°lido! Digite um valor maior que 0.");
+			    							System.out.println("Digite o valor para dep√≥sito: ");
 				    						valor = ler.nextDouble();
 			    						}
 					    				System.out.print("Digite a conta favorecida: ");
 					    				int favorecido = ler.nextInt();
 					    				System.out.print("Digite sua senha: ");
 					    				String pin = ler.next();
-					    				usuarioLogado.transferir(valor, favorecido, pin);
+					    				if (tipoTransferencia == 1) {
+					    					usuarioLogado.transferir(valor, favorecido, pin);
+					    				}
+					    				else if (tipoTransferencia == 2) {
+					    					usuarioLogado.transferir(valor, favorecido, pin, "PIX");
+					    				}
 			    						continueLoop = false;
 			    					}catch(java.util.InputMismatchException e){
 			    						ler.next();
-		    							System.out.println("Erro! Digite apenas n˙meros.\n");
+		    							System.out.println("Erro! Digite apenas n√∫meros.\n");
 		    						}
 			    				}while(continueLoop);
 			    			}
 			    			else if (opcao == 4) {
+			    				continueLoop=true;
 			    				usuarioLogado.imprimirExtrato();
 			    			}
 			    			else if (opcao == 5) {
+			    				continueLoop=true;
 			    				String tel;
 			    				String pin;
 			    				System.out.print("Digite seu telefone: ");
@@ -176,15 +280,18 @@ public class ProgramaBanco {
 			    				usuario=false;
 			    				opcao=7;
 			    			}
-			    			else {
-			    				System.out.println("OpÁ„o inv·lida!");
+			    			else if (opcao != 7){
+			    				System.out.println("Op√ß√£o inv√°lida!");
 			    			}
 			    		}
 			    	}
 			    }
 			}
-			if (usuario == false && opcao != 7 && opcao != 0)
-	    		System.out.println("\nAgÍncia ou senha inv·lidas!");
+			else if (opcaoLogin != 1 && opcaoLogin != 2) {
+				System.out.println("Op√ß√£o inv√°lida!");
+			}
+			if (usuario == false && opcao != 7 && opcao == 0)
+	    		System.out.println("\nAg√™ncia ou senha inv√°lidas!");
 		}
 	}
 }
