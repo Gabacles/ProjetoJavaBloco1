@@ -137,8 +137,8 @@ public class ProgramaBanco {
 				}
 			}
 			else if (opcaoLogin == 1) {
-				//System.out.println(programa.Fontes.textoLogin);
-				//System.out.println("=============================LOGIN==============================");
+				/*System.out.println(programa.Fontes.textoLogin);
+				System.out.println("=============================LOGIN==============================");*/
 				
 				do {
 					try {
