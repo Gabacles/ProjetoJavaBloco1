@@ -20,6 +20,7 @@ public abstract class Conta {
 	private List<String> extrato;
 	private static List<Conta> contasAbertas = new ArrayList<>();
 	private Random rand = new Random();
+	private int taxaTransferencia = 5;
 	
 	public Conta(Pessoa cliente, double saldo, String senha) {
 		this.cliente = cliente;
@@ -29,41 +30,40 @@ public abstract class Conta {
 		this.senha = senha;
 		this.status = true;
 		this.tentativasErradas = 0;
-		this.extrato = new ArrayList<>(Arrays.asList("========================EXTRATO BANCÁRIO========================\n"));																	
+		this.extrato = new ArrayList<>(Arrays.asList("========================EXTRATO BANCÃ�RIO========================\n"));																	
 	}
 	
 	{
 		getContasAbertas().add(this);
 	}
+	
+	
 
-	public void sacar(double valor, String senha) {
-		
-		if (valor <= saldo & this.getSenha().equals(senha)) {
-			saldo -= valor;
-			tentativasErradas = 0;
-			extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
-			extrato.add("Saque de " + valor + " R$." +  "\n\t\t\t\t\t\tSaldo: " + saldo + " R$ \n");
-			System.out.println("Seu saque foi realizado com sucesso.");
-		} else if (valor > saldo) {
-			System.out.println("Seu saldo é insuficiente");
-		} else {
-			System.out.println("Sua senha está incorreta. Você pode redefini-la, caso precise. "
-					+ "Três tentativas erradas seguidas bloqueiam a conta.");		
-			if(tentativasErradas == 3) {
-				status = false;
-			} else {
-				tentativasErradas++;
-				System.out.println("Você ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
-			}
-		}
-		
+	public List<String> getExtrato() {
+		return extrato;
 	}
+
+	public void setExtrato(List<String> extrato) {
+		this.extrato = extrato;
+	}
+	
+	
+
+	public int getTentativasErradas() {
+		return tentativasErradas;
+	}
+
+	public void setTentativasErradas(int tentativasErradas) {
+		this.tentativasErradas = tentativasErradas;
+	}
+
+	public abstract void sacar(double valor, String senha); 
 	
 	public void depositar(double valor) {
 			saldo += valor;
-			System.out.println("Seu depósito foi realizado com sucesso.");
+			System.out.println("Seu depÃ³sito foi realizado com sucesso.");
 			extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
-			extrato.add("Depósito de " + valor + " R$." +  "\n\t\t\t\t\t\tSaldo: " + saldo + " R$ \n");
+			extrato.add("DepÃ³sito de " + valor + " R$." +  "\n\t\t\t\t\t\tSaldo: " + saldo + " R$ \n");
 	}
 	
 	public void transferir(double valor, int numeroDaConta, String senha) {
@@ -73,36 +73,77 @@ public abstract class Conta {
 			if (conta.getNumeroDaConta() == numeroDaConta) {
 				numeroDeContas.add(conta.getNumeroDaConta());
 				if (conta.isStatus() == false) {
-					System.out.println("Transferência não realizada. A conta do/a foverecido/a está bloqueada.");
+					System.out.println("TransferÃªncia nÃ£o realizada. A conta do/a foverecido/a estÃ¡ bloqueada.");
 				} else if (valor <= saldo & this.getSenha().equals(senha)) {
-					saldo -= valor;
+					saldo -= (valor + taxaTransferencia);
 					tentativasErradas = 0;
 					conta.receberValor(valor);
 					extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
-					extrato.add("Transferência de " + valor + " R$ feita para " + conta.cliente.getNome()
+					extrato.add("TransferÃªncia de " + valor + " R$ feita para " + conta.cliente.getNome()
 							+ ".\n\t\t\t\t\t\tSaldo: " + saldo + " R$ \n");
 					conta.extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
-					conta.extrato.add("Transferência de " + valor + " R$ recebida de " + cliente.getNome()
+					conta.extrato.add("TransferÃªncia de " + valor + " R$ recebida de " + cliente.getNome()
 							+ ".\n\t\t\t\t\t\tSaldo: " + conta.getSaldo() + " R$ \n");
 					System.out.println(
-							"A sua tranferência para " + conta.cliente.getNome() + " foi realizada com sucesso.");
+							"A sua tranferÃªncia para " + conta.cliente.getNome() + " foi realizada com sucesso.");
 				} else if (valor > saldo) {
-					System.out.println("Seu saldo é insuficiente.");
+					System.out.println("Seu saldo Ã© insuficiente.");
 				} else {
-					System.out.println("Sua senha está incorreta. Você pode redefini-la, caso precise. "
-							+ "Três tentativas erradas bloqueiam a conta.");
+					System.out.println("Sua senha estÃ¡ incorreta. VocÃª pode redefini-la, caso precise. "
+							+ "TrÃªs tentativas erradas bloqueiam a conta.");
 					if (tentativasErradas == 3) {
 						status = false;
 					} else {
 						tentativasErradas++;
-						System.out.println("Você ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
+						System.out.println("VocÃª ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
 					}
 				} 
 			}
 		}
 		
 		if (!numeroDeContas.contains(numeroDaConta)) {
-			System.out.println("O número da conta informada não existe.");
+			System.out.println("O nÃºmero da conta informada nÃ£o existe.");
+		}
+		
+	}
+	
+	public void transferir(double valor, int numeroDaConta, String senha, String modalidade) {
+		
+		List<Integer> numeroDeContas = new ArrayList<>();
+		for (Conta conta : contasAbertas) {	
+			if (conta.getNumeroDaConta() == numeroDaConta) {
+				numeroDeContas.add(conta.getNumeroDaConta());
+				if (conta.isStatus() == false) {
+					System.out.println("TransferÃªncia nÃ£o realizada. A conta do/a foverecido/a estÃ¡ bloqueada.");
+				} else if (valor <= saldo & this.getSenha().equals(senha)) {
+					saldo -= valor;
+					tentativasErradas = 0;
+					conta.receberValor(valor);
+					extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
+					extrato.add("TransferÃªncia de " + valor + " R$ feita para " + conta.cliente.getNome()
+							+ ".\n\t\t\t\t\t\tSaldo: " + saldo + " R$ \n");
+					conta.extrato.add("+++++++++++++++++ " + new Date() + " +++++++++++++++++\n");
+					conta.extrato.add("TransferÃªncia de " + valor + " R$ recebida de " + cliente.getNome()
+							+ ".\n\t\t\t\t\t\tSaldo: " + conta.getSaldo() + " R$ \n");
+					System.out.println(
+							"A sua tranferÃªncia para " + conta.cliente.getNome() + " foi realizada com sucesso.");
+				} else if (valor > saldo) {
+					System.out.println("Seu saldo Ã© insuficiente.");
+				} else {
+					System.out.println("Sua senha estÃ¡ incorreta. VocÃª pode redefini-la, caso precise. "
+							+ "TrÃªs tentativas erradas bloqueiam a conta.");
+					if (tentativasErradas == 3) {
+						status = false;
+					} else {
+						tentativasErradas++;
+						System.out.println("VocÃª ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
+					}
+				} 
+			}
+		}
+		
+		if (!numeroDeContas.contains(numeroDaConta)) {
+			System.out.println("O nÃºmero da conta informada nÃ£o existe.");
 		}
 		
 	}
@@ -113,12 +154,12 @@ public abstract class Conta {
 			tentativasErradas = 0;
 			System.out.println("Sua senha foi modificada com sucesso.");
 		} else {
-			System.out.println("Telefone incorreto. Três tentativas erradas bloqueiam a conta.");
+			System.out.println("Telefone incorreto. TrÃªs tentativas erradas bloqueiam a conta.");
 			if (tentativasErradas == 3) {
 				status = false;
 			} else {
 				tentativasErradas++;
-				System.out.println("Você ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
+				System.out.println("VocÃª ainda tem " + (3 - tentativasErradas) + " tentativas restantes.");
 			}
 		}
 		
@@ -177,7 +218,7 @@ public abstract class Conta {
 	}
 
 	public void consultarSaldo() {
-		System.out.println("Olá, " + cliente.getNome() + ", seu saldo é: " + saldo + " R$.\n");
+		System.out.println("OlÃ¡, " + cliente.getNome() + ", seu saldo Ã©: " + saldo + " R$.\n");
 	}
 	
 	public void imprimirExtrato() {
@@ -188,7 +229,7 @@ public abstract class Conta {
 	public static void imprimirContasAbertas() {
 		System.out.println("=========================CONTAS ABERTAS=========================");
 		for(Conta conta: contasAbertas){			
-			System.out.println("Cliente: " +  conta.cliente.getNome() + "\t\t\tNúmero da conta: " + conta.numeroDaConta);
+			System.out.println("Cliente: " +  conta.cliente.getNome() + "\t\t\tNÃºmero da conta: " + conta.numeroDaConta);
 			}
 		System.out.println("================================================================");
 		}
